@@ -40,32 +40,38 @@ if __name__ == '__main__':
         print(average_rps, median, "Происходят снижения")
         
 # Second part 
-    while True:
-        print("Input slice left and right:")
-        input_slice_left, input_slice_right = input(), input()
-        if input_slice_left.isdigit() and input_slice_right.isdigit():
-            input_slice_left = int(input_slice_left)
-            input_slice_right = int(input_slice_right)
-            break
-        else:
-            print("Error input")
+    # rps_values_int_slice = rps_values_int.copy()
     
-    rps_values_int_slice = rps_values_int.copy()
-    rps_values_int_slice[input_slice_left:input_slice_right]
+    # while True:
+    #     print("Input slice left and right:")
+    #     input_slice_left, input_slice_right = input(), input()
+    #     if input_slice_left.isdigit() and input_slice_right.isdigit():
+    #         input_slice_left = int(input_slice_left)
+    #         input_slice_right = int(input_slice_right)
+    #         break
+    #     elif input_slice_left == "" or input_slice_right == "":
+    #         input_slice_left = 0
+    #         input_slice_right = len(rps_values_int_slice)
+    #         break
+    #     else:
+    #         print("Error input")
     
     
-    for values in rps_values_int_slice:
-        sum_of_rps_values += values
+    # rps_values_int_slice[input_slice_left:input_slice_right]
     
-    average_rps = sum_of_rps_values / len(rps_values_int_slice)          
     
-    rps_values_int_slice.sort()    
-    quotient, remainder = divmod(len(rps_values_int_slice), 2)
-    median = rps_values_int_slice[quotient] if remainder else sum(rps_values_int_slice[quotient - 1:quotient + 1]) / 2
+    # for values in rps_values_int_slice:
+    #     sum_of_rps_values += values
     
-    if average_rps - median > median * 0.25:
-        print(average_rps, median, "Происходят скачки")
-    elif average_rps - median <= median * 0.25:
-        print(average_rps, median, "Нагрузка стабильна")
-    else:
-        print(average_rps, median, "Происходят снижения")  
+    # average_rps = sum_of_rps_values / len(rps_values_int_slice)          
+    
+    # rps_values_int_slice.sort()    
+    # quotient, remainder = divmod(len(rps_values_int_slice), 2)
+    # median = rps_values_int_slice[quotient] if remainder else sum(rps_values_int_slice[quotient - 1:quotient + 1]) / 2
+    
+    # if average_rps - median > median * 0.25:
+    #     print(average_rps, median, "Происходят скачки")
+    # elif average_rps - median <= median * 0.25:
+    #     print(average_rps, median, "Нагрузка стабильна")
+    # else:
+    #     print(average_rps, median, "Происходят снижения")  
