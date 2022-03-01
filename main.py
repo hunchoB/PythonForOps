@@ -60,10 +60,10 @@ def make_decision_about_loading(average_rps, median):
 def main(rps_values):
     get_int_from_string(rps_values)
     updated_int_rps = input_new_data_into_list(get_int_from_string(rps_values))
-    calculate_frequency(updated_int_rps)
+    print(calculate_frequency(updated_int_rps))
     average_rps = calculate_average_of_rps(updated_int_rps)
     median = calculate_median(updated_int_rps)
-    make_decision_about_loading(average_rps, median)
+    print(make_decision_about_loading(average_rps, median))
     
 if __name__ == '__main__':
     rps_values = [5081, 5081,5081,5081,5081,5081,5081,5081,5081,'17184', 10968, 9666, '9102', 12321, '10617', 11633, 5035, 9554, '10424', 9378, '8577', '11602', 14116, 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     
     main(rps_values)
     
-        
+#FIXME:  Добавить работу со срезами!!!!! Добить до конца работу функций  
 # Second part 
     # rps_values_int_slice = rps_values_int.copy()
     
@@ -110,3 +110,5 @@ if __name__ == '__main__':
     #     print(average_rps, median, "Нагрузка стабильна")
     # else:
     #     print(average_rps, median, "Происходят снижения")  
+    
+    
