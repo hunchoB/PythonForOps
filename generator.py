@@ -26,3 +26,5 @@ if __name__ == '__main__':
     COMMANDS = list(map(str, execute_command.split(',')))
     
     main(HOSTS, remove_space_symbols(COMMANDS))
+    
+    # cat /var/log/waf/error.log | grep 'https://the-list.ams3.cdn.digitaloceanspaces.com/' | awk '{print $14}' | sed 's/.$//'
