@@ -1,4 +1,4 @@
-class MetricsAgent():
+class MetricsAgent:
     """Агент сбора метрик"""
     
     @staticmethod
@@ -19,7 +19,7 @@ class MetricsAgent():
         seconds = 0
         for posittion in value:
             if posittion == "-":
-                raise ValueError("This value is above ZERO!")
+                raise ValueError("This value is below ZERO!")
             else:
                 if posittion.isdigit():
                     tmp += posittion
@@ -39,10 +39,10 @@ class MetricsAgent():
             get_metrics_timeout (int): Период сбора метрик(в секундах)
             timeout_push_events (int): Период отправки событий на сервер сбора событий (в секундах)
         """
-        self.__server_ip = server_ip
+        self._server_ip = server_ip
         self.__server_key = server_key
         self.__get_metrics_timeout = get_metrics_timeout
-        self.__timeout_push_events = timeout_push_events
+        self._timeout_push_events = timeout_push_events
         self.counter_call_agent = 0
         self.counter_get_events = 0
         
@@ -52,7 +52,7 @@ class MetricsAgent():
         Собираем события
         :return:
         """
-        print(f"Cобытия сервера {self.__server_ip} собраны. Следующий сбор через {self.__get_metrics_timeout} секунд")
+        print(f"Cобытия сервера {self._server_ip} собраны. Следующий сбор через {self.__get_metrics_timeout} секунд")
         self.counter_call_agent += 1
         self.counter_get_events += 1
         
@@ -62,7 +62,7 @@ class MetricsAgent():
         Отправляем события на удаленный сервер
         :return:
         """
-        print(f"Cобытия сервера {self.__server_ip} собраны отправлены на сервер сбора метрик. Следующиая отправка через {self.__timeout_push_events} секунд")
+        print(f"Cобытия сервера {self._server_ip} собраны отправлены на сервер сбора метрик. Следующиая отправка через {self._timeout_push_events} секунд")
         self.counter_call_agent += 1
 
         
@@ -81,7 +81,7 @@ class MetricsAgent():
         Получаем информацию о том, сколько событий было собрано
         :return:
         """
-        print(f"С сервера {self.__server_ip} собрано {self.counter_get_events} событий")
+        print(f"С сервера {self._server_ip} собрано {self.counter_get_events} событий")
     
     
     @property    
@@ -111,7 +111,7 @@ class MetricsAgent():
         Returns:
             int: Возвращает значение таймаута отправки метрик в секундах
         """
-        return self.__timeout_push_events
+        return self._timeout_push_events
     
     
     @change_timeouts_pushing_events.setter
@@ -121,12 +121,61 @@ class MetricsAgent():
         Args:
             new_value (str): Значение периода в формате "<Число>h<Число>m<Число>s"
         """
-        self.__timeout_push_events = self.calculate_seconds(new_value)
+        self._timeout_push_events = self.calculate_seconds(new_value)
         
+        
+class PrometheusAgent(MetricsAgent):
+    """Агент сбора метрик для Prometheus
 
+    Args:
+        MetricsAgent (object): Родительский класс агента сбора метрик
+    """
+    def push_events_to_the_metrics_server(self):
+        """
+        Отправляем события на удаленный сервер от Агента Prometheus
+        :return:
+        """
+        print(f"Cобытия сервера {self._server_ip} собраны отправлены по запросу от Prometheus")
+        self.counter_call_agent += 1
+        
+    
+    @property
+    def change_timeouts_pushing_events(self):
+        """Закрываем метод управления периодом отправки
+
+        Returns:
+            int: Возвращает ошибку, так как нельзя управлять периодом отправки событий
+        """
+        raise AttributeError( "Нельзя управлять периодом отправки событий т.к. работает в модели pull" )
+
+#TODO: Отправка событий на сервер сбора метрик: при использовании выводится сообщение "события сервера <IP-адрес> собраны отправлены в Carbon. 
+# Следующая отправка через <период отправки событий на сервер сбора событий> секунд"
+class CarbonAgent(MetricsAgent):
+    
+    def __init__(self, server_ip: str, server_key: str, get_metrics_timeout: int, timeout_push_events: int, carbon_server_ip: str):
+        """Конструктор
+
+        Args:
+            server_ip (str): IP адрес сервера, с которого собираем метрики
+            server_key (str): Ключ для подключения к серверу
+            get_metrics_timeout (int): Период сбора метрик(в секундах)
+            timeout_push_events (int): Период отправки событий на сервер сбора событий (в секундах)
+            carbon_server_ip (str): Адрес сервера Carbon
+        """
+        super().__init__(server_ip, server_key, get_metrics_timeout, timeout_push_events)
+        self.__carbon_server_ip = carbon_server_ip
+        
+        
+    def push_events_to_the_metrics_server(self):
+        """_summary_
+        """
+        print(f"Cобытия сервера {self._server_ip} собраны отправлены в Carbon. Следующая отправка через {self._timeout_push_events} секунд")
+        self.counter_call_agent += 1
+    
+    
 
 def main():
-    agent_one = MetricsAgent("192.168.0.1", "keykeykey", 5, 10)
+    # agent_one = MetricsAgent("192.168.0.1", "keykeykey", 5, 10)
     
     # print(agent_one.change_timeouts_getting_metrics)
     # agent_one.change_timeouts_getting_metrics = '1h32m14s'
@@ -135,6 +184,14 @@ def main():
     # print(agent_one.change_timeouts_pushing_events)
     # agent_one.change_timeouts_pushing_events = '32m14s'
     # agent_one.push_events_to_the_metrics_server()
+    
+    # agent_two = PrometheusAgent("192.168.0.255", "keykey", 15, 35)
+    # agent_two.push_events_to_the_metrics_server()
+    # print(agent_two.change_timeouts_pushing_events)
+    # agent_two.change_timeouts_pushing_events = '1h32m14s'
+    
+    agent_three = CarbonAgent("192.168.0.0", "key", 175, 355, "1.1.1.1")
+    agent_three.push_events_to_the_metrics_server()
 
 if __name__ == '__main__':
     main()
