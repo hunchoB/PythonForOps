@@ -148,10 +148,13 @@ class PrometheusAgent(MetricsAgent):
         """
         raise AttributeError( "Нельзя управлять периодом отправки событий т.к. работает в модели pull" )
 
-#TODO: Отправка событий на сервер сбора метрик: при использовании выводится сообщение "события сервера <IP-адрес> собраны отправлены в Carbon. 
-# Следующая отправка через <период отправки событий на сервер сбора событий> секунд"
+
 class CarbonAgent(MetricsAgent):
-    
+    """Агент сбора метрик для Carbon
+
+    Args:
+        MetricsAgent (object): Родительский класс агента сбора метрик
+    """
     def __init__(self, server_ip: str, server_key: str, get_metrics_timeout: int, timeout_push_events: int, carbon_server_ip: str):
         """Конструктор
 
